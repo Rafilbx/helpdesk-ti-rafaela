@@ -43,7 +43,21 @@ class Notice(Base):
     created_at:Mapped[datetime]=mapped_column(DateTime,default=datetime.utcnow)
 
 Base.metadata.create_all(engine)
-app=FastAPI(title="Tickets Service",version="1.1.0")
+
+# Migração simples para bancos SQLite criados por versões anteriores do serviço.
+# create_all não adiciona colunas a tabelas existentes.
+if DATABASE_URL.startswith("sqlite"):
+    with engine.begin() as connection:
+        ticket_columns = {
+            row[1] for row in connection.exec_driver_sql("PRAGMA table_info(tickets)").fetchall()
+        }
+        if "created_at" not in ticket_columns:
+            connection.exec_driver_sql("ALTER TABLE tickets ADD COLUMN created_at DATETIME")
+            connection.exec_driver_sql(
+                "UPDATE tickets SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL"
+            )
+
+app=FastAPI(title="Tickets Service",version="1.1.1")
 
 def db():
     s=SessionLocal()
