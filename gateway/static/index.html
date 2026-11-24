@@ -30,7 +30,7 @@
       <nav class="nav">
         <button class="nav-item active" data-page="dashboard"><span class="nav-icon">▦</span>Visão geral</button>
         <button class="nav-item" data-page="tickets"><span class="nav-icon">▤</span>Chamados <span id="nav-ticket-count" class="nav-count">0</span></button>
-        <button class="nav-item" data-page="assets"><span class="nav-icon">▣</span>Equipamentos</button>
+        <button class="nav-item" data-page="assets"><span class="nav-icon">▣</span>Equipamentos</button>\n        <button class="nav-item" data-page="notifications"><span class="nav-icon">◉</span>Notificações</button>
         <button class="nav-item admin-only" data-page="users"><span class="nav-icon">♙</span>Usuários</button>
       </nav>
       <div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><b>Precisa de ajuda?</b><p>Consulte a equipe de suporte para resolver qualquer dificuldade.</p></div><button id="logout-btn" class="logout"><span>↪</span> Sair da conta</button></div>
@@ -52,7 +52,7 @@
         </section>
         <section id="page-tickets" class="page hidden"><div class="page-heading"><div><span class="eyebrow">ATENDIMENTO</span><h1>Chamados</h1><p>Gerencie e acompanhe as solicitações de suporte.</p></div><button class="btn btn-primary" data-action="new-ticket">＋ Novo chamado</button></div><section class="panel"><div class="toolbar"><div class="searchbox">⌕ <input id="ticket-search" placeholder="Buscar chamado..."></div><select id="ticket-filter"><option value="">Todos os status</option><option value="open">Aberto</option><option value="in_progress">Em andamento</option><option value="resolved">Resolvido</option><option value="closed">Fechado</option></select></div><div id="tickets-table" class="table-wrap"></div></section></section>
         <section id="page-assets" class="page hidden"><div class="page-heading"><div><span class="eyebrow">PATRIMÔNIO</span><h1>Equipamentos</h1><p>Consulte os equipamentos cadastrados no inventário.</p></div><button id="add-asset-btn" class="btn btn-primary admin-only" data-action="new-asset">＋ Cadastrar equipamento</button></div><section class="panel"><div class="toolbar"><div class="searchbox">⌕ <input id="asset-search" placeholder="Buscar equipamento..."></div></div><div id="assets-table" class="table-wrap"></div></section></section>
-        <section id="page-users" class="page hidden"><div class="page-heading"><div><span class="eyebrow">ADMINISTRAÇÃO</span><h1>Usuários</h1><p>Consulte os usuários cadastrados na plataforma.</p></div></div><section class="panel"><div id="users-table" class="table-wrap"></div></section></section>
+        <section id="page-users" class="page hidden"><div class="page-heading"><div><span class="eyebrow">ADMINISTRAÇÃO</span><h1>Usuários</h1><p>Gerencie solicitantes, técnicos e administradores.</p></div><button class="btn btn-primary" data-action="new-user">＋ Novo usuário</button></div><section class="panel"><div id="users-table" class="table-wrap"></div></section></section>\n        <section id="page-notifications" class="page hidden"><div class="page-heading"><div><span class="eyebrow">CENTRAL DE AVISOS</span><h1>Notificações</h1><p>Acompanhe atualizações dos seus chamados.</p></div></div><section class="panel"><div id="notifications-list"></div></section></section>
       </div>
       <footer class="footer">HelpDesk TI <span>•</span> Central de suporte <span class="footer-right">Desenvolvido para facilitar o atendimento.</span></footer>
     </main>
