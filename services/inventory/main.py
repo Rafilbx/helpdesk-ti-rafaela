@@ -36,7 +36,7 @@ def serialize(a):
 @app.get("/health")
 def health(): return {"service":"inventory","status":"ok"}
 @app.get("/internal/assets/{asset_id}")
-def internal_asset(asset_id:int, session:Session=Depends(db)):
+def internal_asset(asset_id:int, current=Depends(get_current_user), session:Session=Depends(db)):
     a=session.get(Asset,asset_id)
     if not a: raise HTTPException(404,"Ativo não encontrado.")
     return serialize(a)
