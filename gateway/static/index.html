@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101828"><title>HelpDesk TI · Central de suporte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <section id="login-screen" class="login-shell">
+    <div class="login-art">
+      <div class="brand brand-light"><span class="brand-mark">H</span><span>helpdesk<span class="brand-dot">.</span></span></div>
+      <div class="login-copy"><span class="eyebrow">CENTRAL DE TECNOLOGIA</span><h1>Seu suporte,<br><em>sem complicação.</em></h1><p>Um só lugar para acompanhar solicitações, equipamentos e atendimento de TI.</p></div>
+      <div class="art-footer">HELPDESK TI <span>•</span> SUPORTE INTELIGENTE</div>
+    </div>
+    <div class="login-panel"><div class="login-box">
+      <div class="brand brand-dark"><span class="brand-mark">H</span><span>helpdesk<span class="brand-dot">.</span></span></div>
+      <span class="eyebrow">BEM-VINDA(O) DE VOLTA</span><h2>Acesse sua conta</h2><p class="muted">Entre com suas credenciais para continuar.</p>
+      <form id="login-form" class="form-stack"><label>E-mail<input id="login-email" type="email" placeholder="voce@empresa.com" required autocomplete="username"></label><label>Senha<input id="login-password" type="password" placeholder="Sua senha" required autocomplete="current-password"></label><button class="btn btn-primary btn-full" type="submit">Entrar <span>→</span></button><p id="login-error" class="form-error"></p></form>
+      <div class="login-note"><span class="lock">▣</span> Ambiente protegido por autenticação</div>
+    </div></div>
+  </section>
+
+  <div id="app-shell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand brand-light"><span class="brand-mark">H</span><span>helpdesk<span class="brand-dot">.</span></span></div>
+      <div class="workspace"><span class="workspace-icon">⌘</span><span><b>Central de TI</b><small>Área de trabalho</small></span><span class="chevron">⌄</span></div>
+      <div class="nav-label">MENU PRINCIPAL</div>
+      <nav class="nav">
+        <button class="nav-item active" data-page="dashboard"><span class="nav-icon">▦</span>Visão geral</button>
+        <button class="nav-item" data-page="tickets"><span class="nav-icon">▤</span>Chamados <span id="nav-ticket-count" class="nav-count">0</span></button>
+        <button class="nav-item" data-page="assets"><span class="nav-icon">▣</span>Equipamentos</button>
+        <button class="nav-item admin-only" data-page="users"><span class="nav-icon">♙</span>Usuários</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><b>Precisa de ajuda?</b><p>Consulte a equipe de suporte para resolver qualquer dificuldade.</p></div><button id="logout-btn" class="logout"><span>↪</span> Sair da conta</button></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><div class="breadcrumb">Central de TI <span>/</span> <b id="crumb">Visão geral</b></div><div class="top-actions"><span class="status-pill"><i></i> Sistema operacional</span><div class="user-menu"><div id="avatar" class="avatar">U</div><div><b id="user-name">Usuário</b><small id="user-role">Solicitante</small></div></div></div></header>
+      <div class="page-wrap">
+        <section id="page-dashboard" class="page">
+          <div class="page-heading"><div><span class="eyebrow">SEU ESPAÇO DE TRABALHO</span><h1>Visão geral</h1><p>Acompanhe o que está acontecendo na central de suporte.</p></div><button class="btn btn-primary" data-action="new-ticket">＋ Novo chamado</button></div>
+          <div class="welcome-strip"><div><span class="welcome-label">PAINEL DE ATENDIMENTO</span><h2 id="welcome-title">Olá! 👋</h2><p>Veja um resumo das solicitações e acompanhe seus atendimentos.</p></div><div class="welcome-graphic">✳</div></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span>Total de chamados</span><span class="stat-icon purple">▤</span></div><strong id="stat-total">—</strong><small>Solicitações registradas</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Em aberto</span><span class="stat-icon orange">◷</span></div><strong id="stat-open">—</strong><small>Aguardando atendimento</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Em andamento</span><span class="stat-icon blue">↗</span></div><strong id="stat-progress">—</strong><small>Com a equipe técnica</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Resolvidos</span><span class="stat-icon green">✓</span></div><strong id="stat-done">—</strong><small>Atendimentos concluídos</small></article>
+          </div>
+          <div class="content-grid"><section class="panel recent-panel"><div class="panel-heading"><div><h3>Chamados recentes</h3><p>Últimas solicitações cadastradas</p></div><button class="text-button" data-page="tickets">Ver todos →</button></div><div id="recent-tickets" class="table-wrap"></div></section>
+          <section class="panel quick-panel"><div class="panel-heading"><div><h3>Acesso rápido</h3><p>O que você precisa fazer?</p></div></div><button class="quick-action" data-action="new-ticket"><span class="quick-icon violet">＋</span><span><b>Abrir chamado</b><small>Descreva um problema ou solicitação</small></span><span class="quick-arrow">→</span></button><button class="quick-action" data-page="tickets"><span class="quick-icon blue">▤</span><span><b>Acompanhar chamados</b><small>Consulte o andamento dos pedidos</small></span><span class="quick-arrow">→</span></button><button class="quick-action" data-page="assets"><span class="quick-icon green">▣</span><span><b>Ver equipamentos</b><small>Consulte o inventário de TI</small></span><span class="quick-arrow">→</span></button></section></div>
+        </section>
+        <section id="page-tickets" class="page hidden"><div class="page-heading"><div><span class="eyebrow">ATENDIMENTO</span><h1>Chamados</h1><p>Gerencie e acompanhe as solicitações de suporte.</p></div><button class="btn btn-primary" data-action="new-ticket">＋ Novo chamado</button></div><section class="panel"><div class="toolbar"><div class="searchbox">⌕ <input id="ticket-search" placeholder="Buscar chamado..."></div><select id="ticket-filter"><option value="">Todos os status</option><option value="open">Aberto</option><option value="in_progress">Em andamento</option><option value="resolved">Resolvido</option><option value="closed">Fechado</option></select></div><div id="tickets-table" class="table-wrap"></div></section></section>
+        <section id="page-assets" class="page hidden"><div class="page-heading"><div><span class="eyebrow">PATRIMÔNIO</span><h1>Equipamentos</h1><p>Consulte os equipamentos cadastrados no inventário.</p></div><button id="add-asset-btn" class="btn btn-primary admin-only" data-action="new-asset">＋ Cadastrar equipamento</button></div><section class="panel"><div class="toolbar"><div class="searchbox">⌕ <input id="asset-search" placeholder="Buscar equipamento..."></div></div><div id="assets-table" class="table-wrap"></div></section></section>
+        <section id="page-users" class="page hidden"><div class="page-heading"><div><span class="eyebrow">ADMINISTRAÇÃO</span><h1>Usuários</h1><p>Consulte os usuários cadastrados na plataforma.</p></div></div><section class="panel"><div id="users-table" class="table-wrap"></div></section></section>
+      </div>
+      <footer class="footer">HelpDesk TI <span>•</span> Central de suporte <span class="footer-right">Desenvolvido para facilitar o atendimento.</span></footer>
+    </main>
+  </div>
+
+  <div id="modal" class="modal hidden"><div class="modal-backdrop" data-close="true"></div><section class="modal-card"><div class="modal-head"><div><span class="eyebrow" id="modal-eyebrow">NOVA SOLICITAÇÃO</span><h2 id="modal-title">Abrir chamado</h2></div><button class="icon-button" data-close="true">×</button></div><form id="modal-form"><div id="modal-fields"></div><p id="modal-error" class="form-error"></p><div class="modal-actions"><button type="button" class="btn btn-quiet" data-close="true">Cancelar</button><button type="submit" class="btn btn-primary">Salvar solicitação</button></div></form></section></div>
+  <div id="toast" class="toast"></div>
+  <script src="/app.js"></script>
+</body></html>
