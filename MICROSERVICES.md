@@ -24,7 +24,7 @@ Os serviços não compartilham tabelas. O Tickets consulta o Inventory por HTTP 
 docker compose --env-file .env -f docker-compose.microservices.yml up --build
 ```
 
-A API fica disponível em `http://localhost:8000`. Documentação interativa: `http://localhost:8000/docs`.
+A interface web fica disponível em `http://localhost:8000/`. A documentação interativa da API fica em `http://localhost:8000/docs`.
 
 ## Rotas principais
 
