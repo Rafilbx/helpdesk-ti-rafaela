@@ -1,4 +1,6 @@
-# HelpDesk TI — microsserviços
+# HelpDesk TI - microsserviços
+
+## Vídeo Apresentação: https://youtu.be/9FLjCnGbfHs
 
 Projeto de decomposição do HelpDesk TI em serviços independentes para a atividade de Arquitetura de Software.
 
@@ -228,3 +230,4 @@ Todas exigem login, exceto `/auth/login` e `/saude`.
 | PATCH | `/chamados/{id}/status` | Muda o status | Técnico e admin (solicitante: fechar ou reabrir) |
 | POST | `/chamados/{id}/comentarios` | Comenta no chamado | Envolvidos |
 | GET | `/notificacoes` | Minhas notificações | Logado |
+
