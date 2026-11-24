@@ -32,7 +32,13 @@ class Register(BaseModel):
 class Login(BaseModel):
     email: EmailStr
     password: str
-class AdminUserCreate(BaseModel):\n    name: str = Field(min_length=2, max_length=120)\n    email: EmailStr\n    password: str = Field(min_length=8, max_length=128)\n    role: str = "technician"\n\nclass PublicUser(BaseModel):
+class AdminUserCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=128)
+    role: str = "technician"
+
+class PublicUser(BaseModel):
     id: int
     name: str
     email: EmailStr
@@ -70,4 +76,18 @@ def get_user(user_id: int, current=Depends(get_current_user), session: Session =
     user = session.get(User, user_id)
     if not user: raise HTTPException(404, "Usuário não encontrado.")
     return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}
-\n@app.post("/users", status_code=201, dependencies=[Depends(require_roles("admin"))])\ndef create_user(data: AdminUserCreate, session: Session = Depends(db)):\n    email = str(data.email).lower()\n    if data.role not in {"user", "technician", "admin"}: raise HTTPException(422, "Perfil inválido.")\n    if session.query(User).filter_by(email=email).first(): raise HTTPException(409, "E-mail já cadastrado.")\n    user = User(name=data.name.strip(), email=email, role=data.role, password_hash=bcrypt.hashpw(data.password.encode(), bcrypt.gensalt()).decode())\n    session.add(user); session.commit(); session.refresh(user)\n    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}\n\n@app.get("/internal/technicians/{user_id}")\ndef internal_technician(user_id: int, current=Depends(get_current_user), session: Session = Depends(db)):\n    user = session.get(User, user_id)\n    if not user or user.role != "technician": raise HTTPException(404, "Técnico não encontrado.")\n    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}\n
+
+@app.post("/users", status_code=201, dependencies=[Depends(require_roles("admin"))])
+def create_user(data: AdminUserCreate, session: Session = Depends(db)):
+    email = str(data.email).lower()
+    if data.role not in {"user", "technician", "admin"}: raise HTTPException(422, "Perfil inválido.")
+    if session.query(User).filter_by(email=email).first(): raise HTTPException(409, "E-mail já cadastrado.")
+    user = User(name=data.name.strip(), email=email, role=data.role, password_hash=bcrypt.hashpw(data.password.encode(), bcrypt.gensalt()).decode())
+    session.add(user); session.commit(); session.refresh(user)
+    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}
+
+@app.get("/internal/technicians/{user_id}")
+def internal_technician(user_id: int, current=Depends(get_current_user), session: Session = Depends(db)):
+    user = session.get(User, user_id)
+    if not user or user.role != "technician": raise HTTPException(404, "Técnico não encontrado.")
+    return {"id": user.id, "name": user.name, "email": user.email, "role": user.role}
