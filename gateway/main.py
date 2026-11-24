@@ -14,6 +14,7 @@ ROUTES = [
     ("/users", "USERS_URL"),
     ("/assets", "INVENTORY_URL"),
     ("/tickets", "TICKETS_URL"),
+    ("/notifications", "TICKETS_URL"),
 ]
 HOP_BY_HOP = {
     "connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
@@ -36,6 +37,7 @@ def frontend_styles():
     return FileResponse(STATIC_DIR / "style.css", media_type="text/css")
 
 
+@app.get("/saude")
 @app.get("/health")
 def health():
     return {"service": "gateway", "status": "ok"}
