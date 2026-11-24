@@ -1,0 +1,88 @@
+services:
+  users-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_USER: helpdesk
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+    volumes: [users_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U helpdesk -d users"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [internal]
+  inventory-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: helpdesk
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+    volumes: [inventory_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U helpdesk -d inventory"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [internal]
+  tickets-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tickets
+      POSTGRES_USER: helpdesk
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+    volumes: [tickets_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U helpdesk -d tickets"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [internal]
+  users:
+    build:
+      context: .
+      dockerfile: services/users/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://helpdesk:${DB_PASSWORD}@users-db:5432/users
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Defina JWT_SECRET_KEY no arquivo .env}
+    depends_on:
+      users-db: {condition: service_healthy}
+    networks: [internal]
+  inventory:
+    build:
+      context: .
+      dockerfile: services/inventory/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://helpdesk:${DB_PASSWORD}@inventory-db:5432/inventory
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Defina JWT_SECRET_KEY no arquivo .env}
+    depends_on:
+      inventory-db: {condition: service_healthy}
+    networks: [internal]
+  tickets:
+    build:
+      context: .
+      dockerfile: services/tickets/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://helpdesk:${DB_PASSWORD}@tickets-db:5432/tickets
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Defina JWT_SECRET_KEY no arquivo .env}
+      INVENTORY_URL: http://inventory:8002
+    depends_on:
+      tickets-db: {condition: service_healthy}
+      inventory: {condition: service_started}
+    networks: [internal]
+  gateway:
+    build: ./gateway
+    environment:
+      USERS_URL: http://users:8001
+      INVENTORY_URL: http://inventory:8002
+      TICKETS_URL: http://tickets:8003
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on: [users, inventory, tickets]
+    networks: [internal]
+volumes:
+  users_data:
+  inventory_data:
+  tickets_data:
+networks:
+  internal:
+    driver: bridge
