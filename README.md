@@ -1,3 +1,78 @@
+# HelpDesk TI — microsserviços
+
+Projeto de decomposição do HelpDesk TI em serviços independentes para a atividade de Arquitetura de Software.
+
+## Interface gráfica
+
+A nova interface web é servida pelo API Gateway:
+
+- **Sistema:** http://localhost:8000/
+- **Documentação da API:** http://localhost:8000/docs
+
+A interface permite entrar/cadastrar solicitantes, abrir e acompanhar chamados, consultar equipamentos, adicionar comentários, acompanhar notificações e, com perfil administrador, gerenciar equipamentos e usuários. Administradores também podem cadastrar técnicos e atribuir chamados.
+
+## Como executar a versão de microsserviços (Windows, sem Docker)
+
+As dependências devem estar instaladas no ambiente virtual. Abra quatro terminais PowerShell na pasta raiz do projeto e execute um bloco em cada terminal. Mantenha os quatro abertos.
+
+**1. Usuários — porta 8001**
+```powershell
+.\.venv\Scripts\Activate.ps1
+$project = (Get-Location).Path
+$env:PYTHONPATH="$project\services\shared"
+$env:JWT_SECRET_KEY="chave-local-de-teste-com-mais-de-32-caracteres"
+cd services/users
+python -m uvicorn main:app --reload --port 8001
+```
+
+**2. Inventário — porta 8002**
+```powershell
+.\.venv\Scripts\Activate.ps1
+$project = (Get-Location).Path
+$env:PYTHONPATH="$project\services\shared"
+$env:JWT_SECRET_KEY="chave-local-de-teste-com-mais-de-32-caracteres"
+cd services/inventory
+python -m uvicorn main:app --reload --port 8002
+```
+
+**3. Chamados — porta 8003**
+```powershell
+.\.venv\Scripts\Activate.ps1
+$project = (Get-Location).Path
+$env:PYTHONPATH="$project\services\shared"
+$env:JWT_SECRET_KEY="chave-local-de-teste-com-mais-de-32-caracteres"
+$env:INVENTORY_URL="http://127.0.0.1:8002"
+$env:USERS_URL="http://127.0.0.1:8001"
+cd services/tickets
+python -m uvicorn main:app --reload --port 8003
+```
+
+**4. Gateway e interface — porta 8000**
+```powershell
+.\.venv\Scripts\Activate.ps1
+$env:USERS_URL="http://127.0.0.1:8001"
+$env:INVENTORY_URL="http://127.0.0.1:8002"
+$env:TICKETS_URL="http://127.0.0.1:8003"
+cd gateway
+python -m uvicorn main:app --reload --port 8000
+```
+
+Abra http://localhost:8000/ no navegador. Para testar as APIs individualmente, use também as documentações nas portas 8001, 8002 e 8003.
+
+### Preparar o primeiro administrador
+
+Cadastre uma conta pela tela inicial. Em seguida, em um quinto PowerShell aberto na raiz do projeto, substitua o e-mail abaixo pelo e-mail cadastrado:
+```powershell
+python -c "import sqlite3; db=sqlite3.connect('services/users/users.db'); db.execute('UPDATE users SET role=? WHERE email=?', ('admin','seuemail@email.com')); db.commit(); db.close(); print('Perfil atualizado. Saia e entre novamente.')"
+```
+Saia e entre novamente para atualizar o token. Na tela Usuários, crie um usuário com perfil Técnico para testar a atribuição de chamados.
+
+## Arquitetura e limitações
+
+A implementação está organizada em Gateway, Users, Inventory e Tickets, com persistência independente por serviço e comunicação HTTP entre serviços. O modo local utiliza um arquivo SQLite separado para cada serviço. A configuração Docker Compose mantém bancos PostgreSQL separados, mas não foi validada em execução nesta sessão. A migração dos dados antigos não é automática e integrações externas de e-mail/SMS e recursos avançados de SLA/auditoria ainda não foram reproduzidos integralmente. Consulte [MICROSERVICES.md](MICROSERVICES.md) para detalhes técnicos.
+
+---
+
 # HelpDesk TI · versão monolítica
 
 Sistema de chamados de TI (no estilo de um GLPI simplificado), feito em **Python + FastAPI**.
